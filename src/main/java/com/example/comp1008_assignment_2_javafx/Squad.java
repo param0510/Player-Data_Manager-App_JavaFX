@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 public class Squad {
     private String squadName;
-    private ArrayList<Player> squad;
+    private ArrayList<Player> squadList;
 
     public Squad(String squadName) {
         setSquadName(squadName);
-        this.squad = new ArrayList<>();
+        this.squadList = new ArrayList<>();
     }
 
     public String getSquadName() {
@@ -20,24 +20,24 @@ public class Squad {
         this.squadName = squadName;
     }
 
-    public ArrayList<Player> getSquad() {
-        return squad;
+    public ArrayList<Player> getSquadList() {
+        return squadList;
     }
 
-    public void setSquad(ArrayList<Player> squad) {
-        this.squad = squad;
+    public void setSquadList(ArrayList<Player> squad) {
+        this.squadList = squad;
     }
 
     public void addPlayer(Player player) {
-        squad.add(player);
+       squadList.add(player);
     }
 
     public Player getPlayer(int index) {
-        return (squad.get(index));
+        return (squadList.get(index));
     }
 
     public void deletePlayer(int index) {
-        squad.remove(index);
+        squadList.remove(index);
     }
 
     public void editPlayer(int index) {
@@ -45,13 +45,13 @@ public class Squad {
     }
 
     public int getNumOfPlayers() {
-        return squad.size();
+        return squadList.size();
     }
 
     public int getSquadStrength() {
-        int totalNumOfPlayers = squad.size();
+        int totalNumOfPlayers = squadList.size();
         int attributeAverage = 0;
-        for (Player player : squad) {
+        for (Player player : squadList) {
             attributeAverage = attributeAverage + (player.getAttack()+player.getDefense()+player.getSpeed())/3;
         }
         return (attributeAverage/totalNumOfPlayers);

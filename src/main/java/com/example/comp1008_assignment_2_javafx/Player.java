@@ -53,7 +53,7 @@ public class Player {
         firstName = firstName.trim();
         if (firstName.length() >= 2)
         {
-            firstName = firstName.substring(0,1).toUpperCase() + firstName.substring(1).toUpperCase();
+            firstName = firstName.substring(0,1).toUpperCase() + firstName.substring(1).toLowerCase();
             this.firstName = firstName;
         }
         else
@@ -78,7 +78,7 @@ public class Player {
         lastName = lastName.trim();
         if (lastName.length() >= 2)
         {
-            lastName = lastName.substring(0,1).toUpperCase() + lastName.substring(1).toUpperCase();
+            lastName = lastName.substring(0,1).toUpperCase() + lastName.substring(1).toLowerCase();
             this.lastName = lastName;
         }
         else

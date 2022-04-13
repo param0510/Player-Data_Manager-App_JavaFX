@@ -4,8 +4,6 @@ import javafx.scene.image.Image;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
 
 /**
  * This is the Player model class which is used to store the attributes of a soccer player.
@@ -26,7 +24,7 @@ public class Player {
      * @param kitNumber - this stores the kit number assigned to each player
      * @param image - this stores the image of each player
      */
-    public Player(String firstName, String lastName, String position, int attack, int defense, int speed, int kitNumber, Image image) {
+    public Player(String firstName, String lastName, String position, int attack, int defense, int speed, int kitNumber) {
         setFirstName(firstName);
         setLastName(lastName);
         setPosition(position);
@@ -34,7 +32,17 @@ public class Player {
         setDefense(defense);
         setSpeed(speed);
         setKitNumber(kitNumber);
-        setImage(image);
+        String fileName = String.format("img/%s.jpg",getFirstName());
+        try {
+
+            image = new Image(getClass().getResource(fileName).toExternalForm());
+        }
+        catch (Exception e) {
+            image = new Image(getClass().getResource("img/noImage.jpg").toExternalForm());
+        }
+
+//        setImage(image);
+
     }
 
     /**

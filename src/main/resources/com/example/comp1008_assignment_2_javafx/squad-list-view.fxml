@@ -123,7 +123,7 @@
                         </VBox>
                      </children>
                   </FlowPane>
-                  <GridPane id="viewBox" fx:id="viewPlayerGridPane" prefHeight="211.0" prefWidth="395.0" GridPane.rowIndex="1">
+                  <GridPane fx:id="viewPlayerGridPane" prefHeight="211.0" prefWidth="395.0" GridPane.rowIndex="1">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="246.3999755859375" minWidth="10.0" prefWidth="174.60001220703126" />
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="242.39997558593754" minWidth="10.0" prefWidth="231.39998779296874" />

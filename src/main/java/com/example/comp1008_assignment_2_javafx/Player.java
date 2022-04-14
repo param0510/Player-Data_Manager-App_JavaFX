@@ -11,7 +11,8 @@ import java.util.Arrays;
 public class Player {
     private String firstName, lastName, position;
     private int attack, defense, speed, kitNumber;
-    private Image image;
+//    private Image image;
+    private String imageLocation;
 
     /**
      * This is the Player class constructor which uses various set methods to populate the instance variables after necessary validation
@@ -22,7 +23,6 @@ public class Player {
      * @param defense - this stores the player's defensive ability
      * @param speed - this stores the speed of each player
      * @param kitNumber - this stores the kit number assigned to each player
-     * @param image - this stores the image of each player
      */
     public Player(String firstName, String lastName, String position, int attack, int defense, int speed, int kitNumber) {
         setFirstName(firstName);
@@ -32,16 +32,7 @@ public class Player {
         setDefense(defense);
         setSpeed(speed);
         setKitNumber(kitNumber);
-        String fileName = String.format("img/%s.jpg",getFirstName());
-        try {
-
-            image = new Image(getClass().getResource(fileName).toExternalForm());
-        }
-        catch (Exception e) {
-            image = new Image(getClass().getResource("img/noImage.jpg").toExternalForm());
-        }
-
-//        setImage(image);
+        imageLocation = String.format("img/%d_%s.jpg", getKitNumber(), getFirstName());
 
     }
 
@@ -110,6 +101,7 @@ public class Player {
     public void setPosition(String position) {
         ArrayList<String> positions = new ArrayList<>(Arrays.asList("CF", "ST", "LW", "RW", "CM", "LM", "RM", "CB", "LB", "RB", "GK"));
         position = position.toUpperCase();
+        position = position.trim();
         if(positions.contains(position)) {
             this.position = position;
         }
@@ -205,19 +197,26 @@ public class Player {
     }
 
     /**
-     * Getter for image of the player
+     * Getter for image location of the player
      * @return image
      */
-    public Image getImage() {
-        return image;
+    public String getImageLocation() {
+        return imageLocation;
     }
 
     /**
-     * Setter for image of the player
-     * @param image
+     * Setter for image location of the player
+     * @param imageLocation
      */
-    public void setImage(Image image) {
-        this.image = image;
+    public void setImageLocation(String imageLocation) {
+
+        imageLocation = imageLocation.trim();
+        if (imageLocation.equals(String.format("img/%d_%s.jpg", kitNumber, firstName))) {
+            this.imageLocation = imageLocation;
+        }
+        else {
+            throw new IllegalArgumentException(String.format("Please enter valid an image location in the format - [img/%d_%s.jpg]", kitNumber ,firstName));
+        }
     }
 
     /**
@@ -226,7 +225,7 @@ public class Player {
      */
     @Override
     public String toString() {
-        return String.format("%d \t %s %s",kitNumber,lastName, firstName);
+        return String.format("[%d]-%s %s",kitNumber, firstName, lastName);
 
     }
 }

@@ -1,0 +1,27 @@
+/**
+I just added some basic styling to the window to make it look bearable, haha.
+ */
+.root {
+    -fx-background-color: lightblue;
+}
+AnchorPane {
+    -fx-border-color: black;
+    -fx-border-style: solid;
+    -fx-border-width: 2px;
+    -fx-padding: 2px;
+}
+Button {
+    -fx-border-color: black;
+    -fx-border-style: dotted;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+
+}
+TableView{
+    fx-border-color: black;
+    -fx-border-style: dashed;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}

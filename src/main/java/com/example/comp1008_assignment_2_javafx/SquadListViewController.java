@@ -12,17 +12,22 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class SquadListViewController implements Initializable {
 
     @FXML
-    private TableColumn<Player, Integer> kitNumber;
+    private TableColumn<Player, Integer> kitNumberColumn;
 
     @FXML
-    private TableColumn<Player, String> playerName;
+    private TableColumn<Player, String> firstNameColumn;
+
+    @FXML
+    private TableColumn<Player, String> lastNameColumn;
 
     @FXML
     private TableView<Player> table;
@@ -98,41 +103,59 @@ public class SquadListViewController implements Initializable {
     @FXML
     private ImageView playerImageDisplay;
 
-    private int selectedIndex;
+    @FXML
+    private Label totalPlayersLabel;
 
-//    I think this won't be required
-//    private Player selectedPlayer;
+    @FXML
+    private Label squadStrengthLabel;
+
+    @FXML
+    private Button strongestPlayerButton;
+
+    @FXML
+    private Button weakestPlayerButton;
+
+    @FXML
+    private VBox tableUpdateButtons;
+
+    private int selectedIndex;
+    private Squad squad;
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-//        table.getItems().
 
 
-        kitNumber.setCellValueFactory(new PropertyValueFactory<Player, Integer>("kitNumber"));
-        playerName.setCellValueFactory(new PropertyValueFactory<Player, String>("firstName"));
+        kitNumberColumn.setCellValueFactory(new PropertyValueFactory<Player, Integer>("kitNumber"));
+        firstNameColumn.setCellValueFactory(new PropertyValueFactory<Player, String>("firstName"));
+        lastNameColumn.setCellValueFactory(new PropertyValueFactory<Player, String>("lastName"));
 
-        Player player1 = new Player("mamoun", "Paul", "rw", 78, 89, 92, 3);
-        Player player2 = new Player("karen", "hartman", "lw", 72, 82, 95, 5);
-        Player player3 = new Player("ellora", "roy", "lw", 68, 56, 87, 7);
+        Player player1 = new Player("Jordan", "Pickford", "gk", 58, 90, 82, 1);
+        Player player2 = new Player("Luke", "Shaw", "lb", 62, 92, 95, 3);
+        Player player3 = new Player("Harry", "Maguire", "cb", 68, 86, 77, 6);
+        Player player4 = new Player("James", "Maddison", "lm", 78, 86, 83, 7);
+        Player player5 = new Player("Harry", "Kane", "st", 91, 56, 83, 9);
+        Player player6 = new Player("Raheem", "Sterling", "lw", 88, 56, 81, 10);
 
-        Squad squad = new Squad("Barca");
+        squad = new Squad("England F.C.");
         squad.addPlayer(player1);
         squad.addPlayer(player2);
         squad.addPlayer(player3);
+        squad.addPlayer(player4);
+        squad.addPlayer(player5);
+        squad.addPlayer(player6);
 
         ObservableList<Player> players = FXCollections.observableArrayList(squad.getSquadList());
 
-
-//        players.addAll(squad.getSquadList());
-//        players.add(player2);
 
 //        Both work
 //        table.setItems(players);
         table.getItems().addAll(players);
 
-        squadNameLabel.setText(Integer.toString(table.getItems().size()));
+        squadNameLabel.setText(squad.getSquadName());
 
+        totalPlayersLabel.setText(Integer.toString(table.getItems().size()));
+        squadStrengthLabel.setText(Integer.toString(squad.getSquadStrength()));
 
         table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
@@ -140,11 +163,6 @@ public class SquadListViewController implements Initializable {
         // Hiding the add player form, in the starting
         addPlayerGridPane.setVisible(false);
 
-//        Hiding the save player changes button before the application launches
-        savePlayerButton.setVisible(false);
-
-        // hide the cancel button
-        cancelButton.setVisible(false);
 
         // hide view player
         viewPlayerGridPane.setVisible(false);
@@ -157,53 +175,25 @@ public class SquadListViewController implements Initializable {
 //            public void handle(MouseEvent event) {
 //                int selectedIndex = -1;
 //                selectedIndex = table.getSelectionModel().getSelectedIndex();
-//
 //                if (selectedIndex != -1)
 //                {
-//                    Player viewPlayer = table.getSelectionModel().getSelectedItem();
-//                    viewPlayerGridPane.setVisible(true);
-//
-//                    firstNameDisplay.setText(viewPlayer.getFirstName());
-//                    lastNameDisplay.setText(viewPlayer.getLastName());
-//                    positionDisplay.setText(viewPlayer.getPosition());
-//                    attackDisplay.setText(Integer.toString(viewPlayer.getAttack()));
-//                    defenseDisplay.setText(Integer.toString(viewPlayer.getDefense()));
-//                    speedDisplay.setText(Integer.toString(viewPlayer.getSpeed()));
-//                    kitNumberDisplay.setText(Integer.toString(viewPlayer.getKitNumber()));
-//
-////                Image is still left!!!
+                        // get selected player for viewing
+//                      Player player = table.getSelectionModel().getSelectedItem();
+//                      viewPlayer(player);
 //                }
-//
 //            }
 //        } );
 
-
-//        try this as well
-
+        // Another way of listening selection of any TableView item
         table.getSelectionModel().selectedItemProperty().addListener((observable) -> {
             int selectedIndex = -1;
             selectedIndex = table.getSelectionModel().getSelectedIndex();
-
             if (selectedIndex != -1)
             {
-                Player viewPlayer = table.getSelectionModel().getSelectedItem();
-                viewPlayerGridPane.setVisible(true);
-
-                firstNameDisplay.setText(viewPlayer.getFirstName());
-                lastNameDisplay.setText(viewPlayer.getLastName());
-                positionDisplay.setText(viewPlayer.getPosition());
-                attackDisplay.setText(Integer.toString(viewPlayer.getAttack()));
-                defenseDisplay.setText(Integer.toString(viewPlayer.getDefense()));
-                speedDisplay.setText(Integer.toString(viewPlayer.getSpeed()));
-                kitNumberDisplay.setText(Integer.toString(viewPlayer.getKitNumber()));
-
-//                Image is still left!!!
-                playerImageDisplay.setImage(viewPlayer.getImage());
-
+                // get selected player for viewing
+                Player player = table.getSelectionModel().getSelectedItem();
+                viewPlayer(player);
             }
-
-
-
         });
 
 
@@ -213,14 +203,9 @@ public class SquadListViewController implements Initializable {
 
         viewPlayerGridPane.setVisible(false);
 
-
         addPlayerGridPane.setVisible(true);
-        savePlayerButton.setVisible(true);
-        cancelButton.setVisible(true);
 
-        deletePlayerButton.setVisible(false);
-        editPlayerButton.setVisible(false);
-        addPlayerButton.setVisible(false);
+        tableUpdateButtons.setVisible(false);
         System.out.println("Pressed!!");
 
         selectedIndex = -1;
@@ -237,22 +222,11 @@ public class SquadListViewController implements Initializable {
 
         viewPlayerGridPane.setVisible(false);
 
-//        int index = table.getSelectionModel().getSelectedIndex();
-//        Object item = table.getSelectionModel().getSelectedItem();
         ObservableList<Player> items = table.getSelectionModel().getSelectedItems();
 
         table.getItems().removeAll(items);
 
-
-//        This did not work!!
-//        for (Player item : items) {
-//
-//            table.getItems().remove(item);
-//        }
-
-        // Update the squad size value being displayed
-        squadNameLabel.setText(Integer.toString(table.getItems().size()));
-
+        updateInfo();
     }
 
     //    Edit player function
@@ -261,8 +235,7 @@ public class SquadListViewController implements Initializable {
 
 
         viewPlayerGridPane.setVisible(false);
-//        try this once
-//        Player editPlayer = null;
+
 
         selectedIndex = table.getSelectionModel().getSelectedIndex();
         Player editPlayer = table.getItems().get(selectedIndex);
@@ -277,28 +250,8 @@ public class SquadListViewController implements Initializable {
             speedTextField.setText(Integer.toString(editPlayer.getSpeed()));
             kitNumberTextField.setText(Integer.toString(editPlayer.getKitNumber()));
 
-            // Unhide the save player changes button
-            savePlayerButton.setVisible(true);
-            cancelButton.setVisible(true);
-
-
-            // hide all the other buttons
-            editPlayerButton.setVisible(false);
-            deletePlayerButton.setVisible(false);
-            addPlayerButton.setVisible(false);
-
-            // Disable selection of different player
-//        table.setDisable(true);
-
-            // Or you can do this
-//            table.setVisible(false);
-
-            table.setDisable(true);
-
-//        Try finding a way to make this work!!!
-//        table.setSelectionModel(null);
+            tableUpdateButtons.setVisible(false);
         }
-
 
     }
 
@@ -309,57 +262,25 @@ public class SquadListViewController implements Initializable {
         try {
 
             viewPlayerGridPane.setVisible(false);
-            // Disable selection for table
-            //        table.setDisable(false);
 
-
-            // try this once...
-
-
-
-            //        Player savePlayer = table.getSelectionModel().getSelectedItem();
-            //        Object savePlayer = table.getSelectionModel().getSelectedItem();
-
-            //        This does not work
-            //        savePlayer.setFirstName(firstNameTextField.getText());
-            //        savePlayer.setLastName(lastNameTextField.getText());
-            //        savePlayer.setPosition(positionTextField.getText());
-            //        savePlayer.setAttack(Integer.parseInt(attackTextField.getText()));
-            //        savePlayer.setDefense(Integer.parseInt(defenseTextField.getText()));
-            //        savePlayer.setSpeed(Integer.parseInt(speedTextField.getText()));
-            //        savePlayer.setKitNumber(Integer.parseInt(kitNumberTextField.getText()));
-            //        Image still remains......
-
-            Player changedPlayer = new Player(firstNameTextField.getText(), lastNameTextField.getText(), positionTextField.getText(), Integer.parseInt(attackTextField.getText()), Integer.parseInt(defenseTextField.getText()), Integer.parseInt(speedTextField.getText()), Integer.parseInt(kitNumberTextField.getText()));
+            Player newChangedPlayer = new Player(firstNameTextField.getText(), lastNameTextField.getText(), positionTextField.getText(), Integer.parseInt(attackTextField.getText()), Integer.parseInt(defenseTextField.getText()), Integer.parseInt(speedTextField.getText()), Integer.parseInt(kitNumberTextField.getText()));
 
             if (selectedIndex != -1) {
 
-                table.getItems().set(selectedIndex, changedPlayer);
+                table.getItems().set(selectedIndex, newChangedPlayer);
             } else {
-                table.getItems().add(changedPlayer);
+                table.getItems().add(newChangedPlayer);
             }
 
-            //        Hide the save changes button and the add player form again..
-            savePlayerButton.setVisible(false);
-            cancelButton.setVisible(false);
-
-            // unhide all the main action buttons
-            editPlayerButton.setVisible(true);
-            deletePlayerButton.setVisible(true);
-            addPlayerButton.setVisible(true);
-
-
+            // Hide the save changes button and the add player form again..
             addPlayerGridPane.setVisible(false);
 
-            // or do this
-            //        table.setVisible(true);
-
-            table.setDisable(false);
+            // unhide all the main action buttons
+            tableUpdateButtons.setVisible(true);
 
             clearAllTextFields();
 
-            // Update the squad size value being displayed
-            squadNameLabel.setText(Integer.toString(table.getItems().size()));
+            updateInfo();
 
         } catch (Exception ex) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -378,21 +299,54 @@ public class SquadListViewController implements Initializable {
 //        clearing all the data entered
         clearAllTextFields();
 
-
-//        table.setVisible(true);
-        table.setDisable(false);
-
         addPlayerGridPane.setVisible(false);
 
-        savePlayerButton.setVisible(false);
-        cancelButton.setVisible(false);
+        tableUpdateButtons.setVisible(true);
 
-        editPlayerButton.setVisible(true);
-        deletePlayerButton.setVisible(true);
-        addPlayerButton.setVisible(true);
+    }
+
+    public void updateInfo() {
+        squad.setSquadList(new ArrayList<>(table.getItems()));
+
+        totalPlayersLabel.setText(Integer.toString(table.getItems().size()));
+        squadStrengthLabel.setText(Integer.toString(squad.getSquadStrength()));
+    }
+
+    public void viewStrongestPlayer() {
+        squad.setSquadList(new ArrayList<>(table.getItems()));
+
+        viewPlayer(squad.getStrongestPlayer());
+    }
+
+    public void viewWeakestPlayer() {
+        squad.setSquadList(new ArrayList<>(table.getItems()));
+
+        viewPlayer(squad.getWeakestPlayer());
     }
 
 
+    public void viewPlayer(Player player) {
+        viewPlayerGridPane.setVisible(true);
+
+        firstNameDisplay.setText(player.getFirstName());
+        lastNameDisplay.setText(player.getLastName());
+        positionDisplay.setText(player.getPosition());
+        attackDisplay.setText(Integer.toString(player.getAttack()));
+        defenseDisplay.setText(Integer.toString(player.getDefense()));
+        speedDisplay.setText(Integer.toString(player.getSpeed()));
+        kitNumberDisplay.setText(Integer.toString(player.getKitNumber()));
+
+        String playerImageLocaton = player.getImageLocation();
+        Image playerImage;
+        try {
+            playerImage = new Image(getClass().getResource(playerImageLocaton).toExternalForm());
+        }
+        catch (Exception e) {
+            playerImage = new Image(getClass().getResource("img/noImage.jpg").toExternalForm());
+        }
+
+        playerImageDisplay.setImage(playerImage);
+    }
 
     public void clearAllTextFields() {
         firstNameTextField.clear();

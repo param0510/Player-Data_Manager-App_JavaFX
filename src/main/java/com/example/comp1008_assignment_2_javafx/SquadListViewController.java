@@ -159,18 +159,16 @@ public class SquadListViewController implements Initializable {
 
         table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-
         // Hiding the add player form, in the starting
         addPlayerGridPane.setVisible(false);
-
 
         // hide view player
         viewPlayerGridPane.setVisible(false);
 
         selectedIndex = -1;
 
+//        Both of these work for listening an item selection in TableView!!
 
-//        Both of these work!!
 //        table.setOnMousePressed(new EventHandler<MouseEvent>() {
 //            public void handle(MouseEvent event) {
 //                int selectedIndex = -1;
@@ -199,6 +197,7 @@ public class SquadListViewController implements Initializable {
 
     }
 
+    // Add player function adds a player object to the table
     public void addPlayerButtonPress() {
 
         viewPlayerGridPane.setVisible(false);
@@ -209,9 +208,6 @@ public class SquadListViewController implements Initializable {
         System.out.println("Pressed!!");
 
         selectedIndex = -1;
-
-        // This also cool try this!!!
-//        table.getSelectionModel().setCellSelectionEnabled(false);
 
         clearAllTextFields();
 
@@ -229,36 +225,45 @@ public class SquadListViewController implements Initializable {
         updateInfo();
     }
 
-    //    Edit player function
+    //    Edit player function edits the selected player
     @FXML
     void editPlayerButtonPress(ActionEvent event) {
 
 
         viewPlayerGridPane.setVisible(false);
 
+        try {
 
-        selectedIndex = table.getSelectionModel().getSelectedIndex();
-        Player editPlayer = table.getItems().get(selectedIndex);
+            selectedIndex = table.getSelectionModel().getSelectedIndex();
+            Player editPlayer = table.getItems().get(selectedIndex);
 
-        if (editPlayer != null) {
-            addPlayerGridPane.setVisible(true);
-            firstNameTextField.setText(editPlayer.getFirstName());
-            lastNameTextField.setText(editPlayer.getLastName());
-            positionTextField.setText(editPlayer.getPosition());
-            attackTextField.setText(Integer.toString(editPlayer.getAttack()));
-            defenseTextField.setText(Integer.toString(editPlayer.getDefense()));
-            speedTextField.setText(Integer.toString(editPlayer.getSpeed()));
-            kitNumberTextField.setText(Integer.toString(editPlayer.getKitNumber()));
+            if (editPlayer != null) {
+                addPlayerGridPane.setVisible(true);
+                firstNameTextField.setText(editPlayer.getFirstName());
+                lastNameTextField.setText(editPlayer.getLastName());
+                positionTextField.setText(editPlayer.getPosition());
+                attackTextField.setText(Integer.toString(editPlayer.getAttack()));
+                defenseTextField.setText(Integer.toString(editPlayer.getDefense()));
+                speedTextField.setText(Integer.toString(editPlayer.getSpeed()));
+                kitNumberTextField.setText(Integer.toString(editPlayer.getKitNumber()));
 
-            tableUpdateButtons.setVisible(false);
+                tableUpdateButtons.setVisible(false);
+            }
+        }
+        catch (Exception ex)
+        {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Invalid choice!");
+            alert.setContentText("Please select a player first!");
+            alert.showAndWait();
         }
 
     }
 
+    // Save player button is pressed to save the player in the table
     @FXML
     void savePlayerButtonPress() {
 
-//        table.getSelectionModel().select(-1);
         try {
 
             viewPlayerGridPane.setVisible(false);
@@ -291,6 +296,7 @@ public class SquadListViewController implements Initializable {
 
     }
 
+    // To cancel any changes to the table
     public void cancelButtonPress() {
 
         selectedIndex = -1;
@@ -305,6 +311,7 @@ public class SquadListViewController implements Initializable {
 
     }
 
+    // To update the squad information
     public void updateInfo() {
         squad.setSquadList(new ArrayList<>(table.getItems()));
 
@@ -312,42 +319,65 @@ public class SquadListViewController implements Initializable {
         squadStrengthLabel.setText(Integer.toString(squad.getSquadStrength()));
     }
 
+    // To view the Strongest player in the squad
     public void viewStrongestPlayer() {
-        squad.setSquadList(new ArrayList<>(table.getItems()));
+            squad.setSquadList(new ArrayList<>(table.getItems()));
+            Player strongestPlayer = squad.getStrongestPlayer();
+            if (strongestPlayer != null) {
 
-        viewPlayer(squad.getStrongestPlayer());
+                viewPlayer(strongestPlayer);
+            }
+            else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error!");
+                alert.setContentText("The player list is empty");
+                alert.showAndWait();
+            }
     }
 
+    // To view the Weakest player in the squad
     public void viewWeakestPlayer() {
+
         squad.setSquadList(new ArrayList<>(table.getItems()));
-
-        viewPlayer(squad.getWeakestPlayer());
+        Player weakestPlayer = squad.getWeakestPlayer();
+        if (weakestPlayer != null) {
+            viewPlayer(weakestPlayer);
+        }
+        else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error!");
+            alert.setContentText("The player list is empty");
+            alert.showAndWait();
+        }
     }
 
 
+    // To view the player in the squad
     public void viewPlayer(Player player) {
-        viewPlayerGridPane.setVisible(true);
 
-        firstNameDisplay.setText(player.getFirstName());
-        lastNameDisplay.setText(player.getLastName());
-        positionDisplay.setText(player.getPosition());
-        attackDisplay.setText(Integer.toString(player.getAttack()));
-        defenseDisplay.setText(Integer.toString(player.getDefense()));
-        speedDisplay.setText(Integer.toString(player.getSpeed()));
-        kitNumberDisplay.setText(Integer.toString(player.getKitNumber()));
+            viewPlayerGridPane.setVisible(true);
 
-        String playerImageLocaton = player.getImageLocation();
-        Image playerImage;
-        try {
-            playerImage = new Image(getClass().getResource(playerImageLocaton).toExternalForm());
-        }
-        catch (Exception e) {
-            playerImage = new Image(getClass().getResource("img/noImage.jpg").toExternalForm());
-        }
+            firstNameDisplay.setText(player.getFirstName());
+            lastNameDisplay.setText(player.getLastName());
+            positionDisplay.setText(player.getPosition());
+            attackDisplay.setText(Integer.toString(player.getAttack()));
+            defenseDisplay.setText(Integer.toString(player.getDefense()));
+            speedDisplay.setText(Integer.toString(player.getSpeed()));
+            kitNumberDisplay.setText(Integer.toString(player.getKitNumber()));
 
-        playerImageDisplay.setImage(playerImage);
+            String playerImageLocaton = player.getImageLocation();
+            Image playerImage;
+            try {
+                playerImage = new Image(getClass().getResource(playerImageLocaton).toExternalForm());
+            }
+            catch (Exception e) {
+                playerImage = new Image(getClass().getResource("img/noImage.jpg").toExternalForm());
+            }
+
+            playerImageDisplay.setImage(playerImage);
     }
 
+    // To clear all the text fields  in the add player form
     public void clearAllTextFields() {
         firstNameTextField.clear();
         lastNameTextField.clear();
